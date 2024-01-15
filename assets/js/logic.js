@@ -7,7 +7,7 @@ var submitButton = document.querySelector("#submit");
 var questionTitleElement = document.querySelector("#question-title");
 var choicesElement = document.querySelector("#choices");
 var feedbackElement = document.querySelector("#feedback");
-var initialsElement = document.querySelector("#initials");
+var userInitialsInput = document.querySelector("#initials");
 var finalScoreElement =document.getElementById("final-score");
 
 //get the div elements
@@ -21,6 +21,12 @@ var timer;
 var score = 0;
 var currentQuestion = 0;
 var penalty = 10;
+
+//create user object from submission
+var userScoreObj = {
+  score : score,
+  initials : userInitialsInput.value.trim()
+}
 
 //initialise audio files
 const audioCorrectAnswer = new Audio("/assets/sfx/correct.wav")
@@ -69,21 +75,25 @@ function displayQuestion() {
   questionObject = quizData[currentQuestion];
   questionTitleElement.innerHTML = questionObject.question;
 
-  questionObject.choices.forEach((choice, index) => {
+  questionObject.choices.forEach((choice,index) => {
     var choiceButton = document.createElement("button");
     choiceButton.textContent = choice;
-    choiceButton.dataset.index = index + 1; //+1 to set to normal index unlike array
-    choiceButton.addEventListener("click", checkAnswer);
+  //  choiceButton.dataset.index = index + 1; //+1 to set to normal index unlike array
+   // choiceButton.addEventListener("click", checkAnswer);
+
+   choiceButton.addEventListener("click", function(){
+    checkAnswer(index+1) });
     choicesElement.appendChild(choiceButton);
   });
 }
 
-function checkAnswer(event) {
-  let userAnswer = event.target.dataset.index;
+function checkAnswer(index) {
+ //let userAnswer = event.target.dataset.index;
+ let userAnswer = index;
   feedbackElement.classList.remove("hide");
-  //console.log(userAnswer + " " + quizData[currentQuestion].answer );
+  
   if (userAnswer == quizData[currentQuestion].answer) {
-    score+= 10;
+    score+= 1;
     currentQuestion++;
     audioCorrectAnswer.play();
     feedbackElement.textContent = "Correct";
@@ -100,13 +110,13 @@ function checkAnswer(event) {
     setTimeout(function () {
       feedbackElement.classList.add("hide");
       displayQuestion();
-    }, 1000);
+    }, 500);
   } 
   else {
     setTimeout(function () {
       feedbackElement.classList.add("hide");  clearInterval(timer);
       exitQuiz();
-    }, 1000);
+    }, 500);
 
     return;
   }
@@ -124,14 +134,39 @@ function decrementTime() {
   }
 }
 
-function submitScore() {}
+function submitScore(event) {
+event.preventDefault();
+
+if(userInitialsInput != '')
+{
+  userScoreObj.score = score;
+  userScoreObj.initials = userInitialsInput.value;
+  storeUserScore();
+  
+}
+else{
+  alert("Please enter your initials");
+  //document.querySelector("#initials").focus();
+  return;
+}
+
+}
+
+function storeUserScore()
+{
+  //stringify and set "user" key in localstorage to userscore object
+  localStorage.setItem("userscore", JSON.stringify(userScoreObj))
+  window.location.assign("highscores.html")
+}
+
+
 
 function exitQuiz() {
  
   questionsElement.classList.add("hide");
   endscreenElement.classList.remove("hide");
   init();
-  finalScoreElement.textContent = score;
+  finalScoreElement.textContent = score + ". You answered " + score + " out of "+ quizData.length
 }
 
 //start timer when the start quiz button is clicked
