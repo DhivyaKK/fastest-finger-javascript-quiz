@@ -1,10 +1,11 @@
-var quizData =[
+//declare data for quiz as array of objects
+const quizData =[
     {
         question: "Commonly used data types do not include",
         choices: ["1.String", "2.Boolean", "3.Alert","4.Numbers"],           
         answer : "3"
     },
-//change options to array for iteration using index
+//choices set to array for iteration using index
     {
         question: "String values must be enclosed within ______ when being assigned to variables",
         choices: ["1.Commas", "2.Curly brackets", "3.Quotes", "4.Parentheses"],

@@ -19,7 +19,7 @@ var questionsElement = document.querySelector("#questions");
 var endscreenElement = document.querySelector("#end-screen");
 
 //variable initialization
-var timeGiven = 30;
+var timeGiven = 60;
 var timer;
 var score = 0;
 var currentQuestion = 0;
@@ -27,13 +27,6 @@ var penalty = 10;
 
 //variables to store scored
 var highscores = [];
-
-
-//create user object from submission
-var userScoreObj = {
-  score: score,
-  initials: userInitialsInput.value.trim(),
-};
 
 //initialise audio files
 const audioCorrectAnswer = new Audio("/assets/sfx/correct.wav");
@@ -80,7 +73,6 @@ function displayQuestion() {
   choicesElement.textContent = "";
   questionObject = quizData[currentQuestion];
   questionTitleElement.innerHTML = questionObject.question;
-
   questionObject.choices.forEach((choice, index) => {
     var choiceButton = document.createElement("button");
     choiceButton.textContent = choice;
@@ -92,12 +84,12 @@ function displayQuestion() {
 }
 
 function checkAnswer(index) {
-  //let userAnswer = event.target.dataset.index;
   let userAnswer = index;
   feedbackElement.classList.remove("hide");
 
   if (userAnswer == quizData[currentQuestion].answer) {
     score += 1;
+    //increment the current index of question
     currentQuestion++;
     audioCorrectAnswer.play();
     feedbackElement.textContent = "Correct";
@@ -107,7 +99,6 @@ function checkAnswer(index) {
     audioIncorrectAnswer.play();
     feedbackElement.textContent = "Wrong";
   }
-  //increment the current index of question in quizData
 
   //check if this is last question
   if (currentQuestion < quizData.length && timeGiven > 0) {
@@ -127,7 +118,7 @@ function checkAnswer(index) {
 }
 
 function decrementTime() {
- // alert(timeGiven);
+  // alert(timeGiven);
 
   if (timeGiven >= 10) {
     timeGiven = timeGiven - penalty;
@@ -140,47 +131,23 @@ function decrementTime() {
 
 function submitQuiz(event) {
   event.preventDefault();
-  
+
   //check if the input textbox is not empty
   let initValue = userInitialsInput.value.trim();
 
- // if (userInitialsInput.value.trim() != "") {
-  if(initValue)
-  {
-    let userScoreObj = { uscore : score , initials : initValue};
-    userInitialsInput.value ='';
+  // if (userInitialsInput.value.trim() != "") {
+  if (initValue) {
+    let userScoreObj = { uscore: score, initials: initValue };
+    userInitialsInput.value = "";
     highscores = JSON.parse(localStorage.getItem("userscore")) || [];
+    debugger;
     highscores.push(userScoreObj);
-    localStorage.setItem("userscore" , JSON.stringify(highscores))
-  } 
-  else
-  {
+    debugger;
+    localStorage.setItem("userscore", JSON.stringify(highscores));
+  } else {
     return;
   }
-  window.location.assign("highscores.html");
-}
-
-function storeUserScore(userScoreObj) {
-  let userscores = [];
-  let mylocalStorageItem = localStorage.getItem("userscore");
-  debugger;
-  if (mylocalStorageItem != null) {
-
-    debugger;
-    userscores = (JSON.parse(mylocalStorageItem));
-    userscores.push(userScoreObj)
-
-   //console.log( arr_userscore);
-   localStorage.setItem("userscore", JSON.stringify(userscores));
-
-  }
-  else{
-    userscores = [userScoreObj];
-   debugger;
-  //stringify and set key "user" in localstorage to userscore object
-  localStorage.setItem("userscore", JSON.stringify(userScoreObj));
-  }
-
+  //redirect to screen to load the user scores and initials
   window.location.assign("highscores.html");
 }
 
@@ -195,7 +162,6 @@ function exitQuiz() {
 //start timer when the start quiz button is clicked
 function startTimer() {
   timer = setInterval(function () {
-    
     timeGiven--;
     timeElement.textContent = timeGiven;
 
