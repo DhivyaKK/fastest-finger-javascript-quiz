@@ -12,10 +12,29 @@ clearButton.addEventListener("click", clearScores);
 renderUserScores();
 
 function renderUserScores() {
-  //iterate the userscores and append OL list
+ 
+  //sort the user score in descdening order of scores-userinitials
+  highScores.sort((a, b) => {
+    if (a.uscore > b.uscore) {
+      return -1;
+    }
+    debugger;
+    if (a.uscore < b.uscore) {
+      return 1;
+    }
+    if (highScores.indexOf(a) > highScores.indexOf(b)) {
+      return 1;
+    }
+    return -1;
+  })
+
+  //iterate the userscores and append to OL list element
   for (let i = 0; i < highScores.length; i++) {
+    //create li html element
     var liElement = document.createElement("li");
+    //assign score + user initials to the li element
     liElement.textContent = highScores[i].uscore + " " + highScores[i].initials;
+    //add the li element to ol
     highScoresList.appendChild(liElement);
   }
 }

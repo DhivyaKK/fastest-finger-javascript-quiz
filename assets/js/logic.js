@@ -7,6 +7,7 @@ var timerElement = document.querySelector(".timer");
 var startButton = document.querySelector("#start");
 var submitInitialsBtn = document.querySelector("#submit");
 
+//get html element references
 var questionTitleElement = document.querySelector("#question-title");
 var choicesElement = document.querySelector("#choices");
 var feedbackElement = document.querySelector("#feedback");
@@ -36,12 +37,14 @@ const audioIncorrectAnswer = new Audio("/assets/sfx/incorrect.wav");
 startButton.addEventListener("click", startQuiz);
 submitInitialsBtn.addEventListener("click", submitQuiz);
 
+init();
+
+//on page load, hide the timer and time
 function init() {
   timeElement.classList.add("hide");
   timerElement.classList.add("hide");
 }
 
-init();
 //trigger this function when start button is clicked.
 function startQuiz() {
   timeElement.textContent = timeGiven;
@@ -56,26 +59,36 @@ function startQuiz() {
   timeElement.classList.remove("hide");
   timerElement.classList.remove("hide");
 
-  //load the questions
+  //call to load the questions
   displayQuestion();
 
-  //begin the timer
+  //call to begin the timer
   startTimer();
 }
 
+//TODO : display the questions and answer choices
 function displayQuestion() {
+
+  var questionObject;
+  choicesElement.textContent = "";
+
+  //check if end of the quiz
   if (currentQuestion >= quizData.length) {
     exitQuiz();
     return;
   }
 
-  var questionObject;
-  choicesElement.textContent = "";
   questionObject = quizData[currentQuestion];
+
+  //assign question
   questionTitleElement.innerHTML = questionObject.question;
+  //iterate the choices for question
   questionObject.choices.forEach((choice, index) => {
+    //create a button for each choice
     var choiceButton = document.createElement("button");
     choiceButton.textContent = choice;
+    
+    //evaluate user selected answer on click
     choiceButton.addEventListener("click", function () {
       checkAnswer(index + 1);
     });
@@ -83,6 +96,7 @@ function displayQuestion() {
   });
 }
 
+//TODO: Evaluate the user selected answer and display if the answer is correct or wrong
 function checkAnswer(index) {
   let userAnswer = index;
   feedbackElement.classList.remove("hide");
@@ -92,12 +106,12 @@ function checkAnswer(index) {
     //increment the current index of question
     currentQuestion++;
     audioCorrectAnswer.play();
-    feedbackElement.textContent = "Correct";
+    feedbackElement.textContent = "Correct!";
   } else {
     decrementTime();
     currentQuestion++;
     audioIncorrectAnswer.play();
-    feedbackElement.textContent = "Wrong";
+    feedbackElement.textContent = "Wrong!";
   }
 
   //check if this is last question
@@ -117,10 +131,12 @@ function checkAnswer(index) {
   }
 }
 
+//TODO: Decrement 10 seconds from timer for every wrong answer
 function decrementTime() {
   // alert(timeGiven);
 
   if (timeGiven >= 10) {
+    //penalty = 10 seconds
     timeGiven = timeGiven - penalty;
     if (timeGiven < 0) {
       //clearInterval(timer);
@@ -129,22 +145,29 @@ function decrementTime() {
   }
 }
 
+//TODO: submit the quiz
 function submitQuiz(event) {
   event.preventDefault();
 
   //check if the input textbox is not empty
   let initValue = userInitialsInput.value.trim();
 
-  // if (userInitialsInput.value.trim() != "") {
+  //if user has entered the initials and on submit
   if (initValue) {
     let userScoreObj = { uscore: score, initials: initValue };
     userInitialsInput.value = "";
+    //if user attempts quiz first time
     highscores = JSON.parse(localStorage.getItem("userscore")) || [];
-    debugger;
+    
+    //store user scores for subsequent attempts
     highscores.push(userScoreObj);
-    debugger;
+    
+    //store user score in local storage to access in highscore.html
     localStorage.setItem("userscore", JSON.stringify(highscores));
-  } else {
+  } 
+  //if no initials is entered and on submit, 
+  else
+  {
     return;
   }
   //redirect to screen to load the user scores and initials
@@ -162,6 +185,7 @@ function exitQuiz() {
 //start timer when the start quiz button is clicked
 function startTimer() {
   timer = setInterval(function () {
+    //continue to decrement timer on start of quiz
     timeGiven--;
     timeElement.textContent = timeGiven;
 
