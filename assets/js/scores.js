@@ -1,38 +1,38 @@
-
 var highScoresList = document.getElementById("highscores");
-var userScoresList = [];
 var clearButton = document.getElementById("clear");
+var userAllScoresObj =  JSON.parse(localStorage.getItem("userscore"));
 
+//eventlistener to clear local storage key value pairs
 clearButton.addEventListener("click", clearScores);
+var highScores = JSON.parse(localStorage.getItem("userscore"));
+
 init();
 
 function init()
 {
     //get the stored user from local storage
-    var storedUserScore = JSON.parse(localStorage.getItem("userscore"))
-    
-    console.log( storedUserScore);
-    console.log(typeof(storedUserScore));
-    console.log(storedUserScore.score);
-    console.log(storedUserScore.initials) 
-    userScoresList = storedUserScore;
-    // if( storedUserScore != null)
-    // {   
-    //     renderUserScores(storedUserScore);
-    // }
+    console.log(userAllScoresObj)
+
     renderUserScores();
 }
 
 function renderUserScores()
 {
+    //debugger;
+    
+    for(let i= 0; i < highScores.length; i++)
+    {
     var liElement = document.createElement("li");
-    liElement.textContent = storeUserScore.score + " " + storedUserScore.initials;
-
-    userScoresList.appendChild(liElement)
+     liElement.textContent = highScores[i].uscore + " " + highScores[i].initials;
+     highScoresList.appendChild(liElement)
+    }
 }
 
 function clearScores()
 {
+highScoresList.textContent = "";
+
 localStorage.clear();
+
 
 }
