@@ -18,11 +18,11 @@ The user can retake the quiz an number of times. At the end of submission, the a
 The application is compatible with most commonly used web browsers. 
 
 <p align="center">
-    <a href=""><img src="https://img.shields.io/badge/see-published-site"  alt="Live Site" /></a>
+    <a href="https://dhivyakk.github.io/fastest-finger-javascript-quiz/"><img src="https://img.shields.io/badge/see-published-site"  alt="Live Site" /></a>
 </p>
 
 <p align="center">
-    <a href=""><img src="https://img.shields.io/badge/git-code-repository"  alt="github code repository" /></a>
+    <a href="https://github.com/DhivyaKK/fastest-finger-javascript-quiz.git"><img src="https://img.shields.io/badge/git-code-repository"  alt="github code repository" /></a>
 </p>
 
 
